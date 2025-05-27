@@ -39,15 +39,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.pneumoniadetectionjetpackcompose.history.HistoryViewModel
+import com.example.pneumoniadetectionjetpackcompose.model.History
+import java.util.UUID
 
 
 @Composable
-fun ScanPage(navController: NavController, modifier: Modifier = Modifier) {
+fun ScanPage(
+    navController: NavController,
+    viewModel: HistoryViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     var uri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
     var prediction by remember { mutableStateOf<String?>(null) }
+    var lastDate by remember { mutableStateOf<String?>(null) }
 
     // Galeri launcher
     val imageLauncher = rememberLauncherForActivityResult(
@@ -63,6 +72,10 @@ fun ScanPage(navController: NavController, modifier: Modifier = Modifier) {
             }
             bitmap = bmp
             prediction = PneumoniaPredictor.predict(context, bmp)
+            lastDate = getTodayDate()
+            val uid = UUID.randomUUID().toString()
+            val history = History(uid, prediction.toString(), "", bmp.toString(), lastDate)
+            viewModel.addHistory(history)
         }
     }
 
@@ -73,6 +86,10 @@ fun ScanPage(navController: NavController, modifier: Modifier = Modifier) {
         selectedBitmap?.let {
             bitmap = it
             prediction = PneumoniaPredictor.predict(context, it) // Prediksi
+            lastDate = getTodayDate()
+            val uid = UUID.randomUUID().toString()
+            val history = History(uid, prediction.toString(), "", bitmap.toString(), lastDate)
+            viewModel.addHistory(history)
         }
     }
 
@@ -141,3 +158,4 @@ fun ScanPage(navController: NavController, modifier: Modifier = Modifier) {
         }
     }
 }
+

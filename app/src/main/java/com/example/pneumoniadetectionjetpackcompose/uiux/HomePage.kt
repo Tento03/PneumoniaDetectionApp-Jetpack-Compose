@@ -43,13 +43,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.pneumoniadetectionjetpackcompose.history.HistoryViewModel
+import com.example.pneumoniadetectionjetpackcompose.model.History
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 @Composable
-fun HomePage(navController: NavController, modifier: Modifier = Modifier) {
+fun HomePage(
+    navController: NavController,
+    viewModel: HistoryViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     var uri by remember { mutableStateOf<Uri?>(null) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -70,6 +78,9 @@ fun HomePage(navController: NavController, modifier: Modifier = Modifier) {
             bitmap = bmp
             prediction = PneumoniaPredictor.predict(context, bmp)
             lastDate = getTodayDate()
+            val uid = UUID.randomUUID().toString()
+            val history = History(uid, prediction.toString(), "", it.toString(), lastDate)
+            viewModel.addHistory(history)
         }
     }
 
@@ -80,6 +91,9 @@ fun HomePage(navController: NavController, modifier: Modifier = Modifier) {
             bitmap = it
             prediction = PneumoniaPredictor.predict(context, it)
             lastDate = getTodayDate()
+            val uid = UUID.randomUUID().toString()
+            val history = History(uid, prediction.toString(), "", bitmap.toString(), lastDate)
+            viewModel.addHistory(history)
         }
     }
 

@@ -38,8 +38,10 @@ import com.example.pneumoniadetectionjetpackcompose.uiux.HomePage
 import com.example.pneumoniadetectionjetpackcompose.uiux.InfoPage
 import com.example.pneumoniadetectionjetpackcompose.uiux.ScanPage
 import com.example.pneumoniadetectionjetpackcompose.uiux.SettingsPage
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
